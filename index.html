@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>壹眼天下 · 会员小程序（演示）</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    background: #e8ecf1;
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; padding: 20px;
+  }
+  /* 手机外壳 */
+  .phone {
+    width: 375px; height: 720px; background: #fff;
+    border-radius: 36px; overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  /* 状态栏 */
+  .statusbar {
+    background: #4a7bff; color: #fff; font-size: 13px;
+    padding: 10px 16px 4px; display: flex; justify-content: space-between;
+  }
+  /* 顶部栏 */
+  .appbar {
+    background: #4a7bff; color: #fff;
+    padding: 12px 16px 14px;
+    font-size: 20px; font-weight: 700;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .appbar .demo-tag {
+    font-size: 12px; font-weight: 400;
+    background: rgba(255,255,255,.25); padding: 3px 8px; border-radius: 10px;
+  }
+  /* 内容滚动区 */
+  .content { flex: 1; overflow-y: auto; padding: 14px; background: #f5f6f8; }
+  /* 欢迎横幅 */
+  .banner {
+    background: linear-gradient(135deg, #4a7bff, #6a9bff);
+    color: #fff; border-radius: 14px; padding: 18px;
+    font-size: 17px; line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  .banner b { font-size: 24px; }
+  /* 大签到按钮 */
+  .sign-btn {
+    width: 100%; border: none; cursor: pointer;
+    background: linear-gradient(135deg, #ff9a3c, #ff6a00);
+    color: #fff; border-radius: 18px;
+    padding: 26px 0; font-size: 30px; font-weight: 800;
+    box-shadow: 0 6px 18px rgba(255,106,0,.35);
+    margin-bottom: 14px;
+  }
+  .sign-btn small { display: block; font-size: 15px; font-weight: 400; margin-top: 6px; }
+  .sign-btn:active { transform: scale(.97); }
+  /* 广告位示意 */
+  .ad {
+    background: #ffe9d6; border: 2px dashed #ff8c2e;
+    border-radius: 12px; padding: 12px;
+    text-align: center; font-size: 15px; color: #a05a10;
+    margin-bottom: 14px;
+  }
+  .ad b { color: #ff6a00; }
+  /* 领券区 */
+  .section-title { font-size: 16px; font-weight: 700; color: #333; margin: 4px 0 10px; }
+  .coupons { display: flex; gap: 10px; margin-bottom: 16px; }
+  .coupon {
+    flex: 1; background: #fff; border-radius: 12px;
+    border: 1px solid #eee; overflow: hidden;
+  }
+  .coupon .val {
+    background: #ff5a5a; color: #fff; text-align: center;
+    padding: 14px 6px; font-size: 26px; font-weight: 800;
+  }
+  .coupon .val small { display: block; font-size: 12px; font-weight: 400; }
+  .coupon .desc {
+    padding: 10px 8px; font-size: 14px; text-align: center; color: #555;
+  }
+  .coupon .get-btn {
+    display: block; width: 80%; margin: 0 auto 10px;
+    background: #4a7bff; color: #fff; border: none; border-radius: 14px;
+    padding: 8px 0; font-size: 15px; cursor: pointer;
+  }
+  /* 通知区 */
+  .notice { background: #fff; border-radius: 12px; padding: 12px; border: 1px solid #eee; }
+  .notice-item {
+    padding: 10px 4px; border-bottom: 1px solid #f0f0f0;
+    font-size: 15px; color: #333; display: flex; align-items: center; gap: 8px;
+  }
+  .notice-item:last-child { border-bottom: none; }
+  .notice-item .tag {
+    flex-shrink: 0; font-size: 12px; color: #fff;
+    background: #ff5a5a; padding: 2px 6px; border-radius: 6px;
+  }
+  /* 底部栏 */
+  .tabbar {
+    background: #fff; border-top: 1px solid #eee;
+    display: flex; justify-content: space-around;
+    padding: 10px 0 12px; font-size: 13px; color: #888;
+  }
+  .tabbar .on { color: #4a7bff; font-weight: 700; }
+  /* 弹窗 */
+  .toast {
+    position: absolute; top: 45%; left: 50%; transform: translate(-50%,-50%);
+    background: rgba(0,0,0,.78); color: #fff;
+    padding: 18px 28px; border-radius: 14px;
+    font-size: 18px; text-align: center;
+    display: none; z-index: 99; max-width: 80%;
+  }
+  /* 页脚提示 */
+  .footnote {
+    text-align: center; font-size: 12px; color: #aaa;
+    padding: 8px 0 4px;
+  }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="statusbar"><span>9:41</span><span>📶 🔋</span></div>
+  <div class="appbar">壹眼天下 · 会员中心<span class="demo-tag">演示版</span></div>
+  <div class="content">
+    <div class="banner">欢迎回来，<b>张大爷</b>！<br>您已连续签到 <b style="color:#ffe066">3 天</b>，再签 4 天可换礼品 🎁</div>
+
+    <button class="sign-btn" onclick="sign()">今天签到<small>领取 2 积分</small></button>
+
+    <div class="ad">📺 <b>广告位（已预留）</b><br>看 30 秒视频，今天积分 <b>翻倍</b></div>
+
+    <div class="section-title">🧧 老板发的券</div>
+    <div class="coupons">
+      <div class="coupon">
+        <div class="val">满100减10<small>全场通用</small></div>
+        <div class="desc">到店出示就能用</div>
+        <button class="get-btn" onclick="toast('券已领到，到店出示即可')">领取</button>
+      </div>
+      <div class="coupon">
+        <div class="val">8 折券<small>新品专用</small></div>
+        <div class="desc">领了 7 天内有效</div>
+        <button class="get-btn" onclick="toast('券已领到，7 天内有效')">领取</button>
+      </div>
+    </div>
+
+    <div class="section-title">📢 老板的通知</div>
+    <div class="notice">
+      <div class="notice-item"><span class="tag">NEW</span>周六全场 8 折，老客户凭券再减</div>
+      <div class="notice-item"><span class="tag">NEW</span>新品到货：玉米种 + 复合肥</div>
+      <div class="notice-item">下周三会员日，签到双倍积分</div>
+    </div>
+
+    <div class="footnote">演示页面 · 功能与正式版一致 · 价格 666</div>
+  </div>
+  <div class="tabbar"><span class="on">🏠 首页</span><span>🧧 领券</span><span>👤 我的</span></div>
+  <div class="toast" id="toast"></div>
+</div>
+<script>
+  var toastEl = document.getElementById('toast');
+  var timer = null;
+  function toast(msg) {
+    toastEl.style.display = 'block';
+    toastEl.textContent = msg;
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(function(){ toastEl.style.display = 'none'; }, 1800);
+  }
+  function sign() {
+    toast('✅ 签到成功！+2 积分（连签 7 天可换礼品）');
+  }
+</script>
+</body>
+</html>
